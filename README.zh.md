@@ -5,7 +5,7 @@
 <p align="center">为 Rust 桌面应用提供统一基础设施。</p>
 <p align="center">简体中文 · <a href="README.md">English</a> · <a href="LICENSE">MIT</a></p>
 
-Cardo 提供可复用的应用基础设施与 GPUI 组件，已接入 [Plus7z](https://github.com/tzhaos/7zp-rust)。
+Cardo 为 Rust 桌面软件提供可复用的应用基础设施与 GPUI 组件。
 
 | Crate | 职责 |
 | --- | --- |
@@ -20,7 +20,13 @@ Cardo 提供可复用的应用基础设施与 GPUI 组件，已接入 [Plus7z](h
 | SQLite | 历史记录及需要事务的运行状态 |
 | JSON | 数据交换，以及 SQLite 内的结构化值 |
 
-产品负责路径、数据结构与业务校验，Cardo 提供持久化能力。详见[存储约定](docs/storage.md)，包括并发、错误和备份行为。不提供旧数据导入或数据库版本转换。
+应用负责路径、数据结构与业务校验，Cardo 提供持久化能力：
+
+- `config::Snapshot<T>` 加载强类型 TOML，支持原子保存、旧内容备份与外部修改检测。只有文件缺失才使用默认值；读取与解析失败均返回错误。
+- `database::Database` 提供 SQLite 事务、备份及完整性检查。已有数据库必须匹配传入的应用标识与结构版本。
+- `storage::Store` 提供原子文件写入与 JSON 序列化辅助方法。
+
+存储操作应在 UI 渲染之外执行。文件锁协调遵守同一约定的写入方；配置文件与数据库之间不提供联合事务。
 
 ## 接入
 
@@ -38,4 +44,4 @@ cardo-ui = { path = "cardo/crates/cardo-ui" }
 cargo build --workspace --locked --release --target x86_64-pc-windows-msvc
 ```
 
-采用 [MIT 许可](LICENSE)。标识沿用 Plus7z 原有的紫色应用立方体，来源见[素材与依赖说明](THIRD_PARTY.md)。
+采用 [MIT 许可](LICENSE)。素材来源及依赖许可见[素材与依赖说明](THIRD_PARTY.md)。

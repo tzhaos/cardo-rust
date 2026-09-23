@@ -6,7 +6,7 @@
 
 <p align="center"><a href="README.zh.md">简体中文</a> · English · <a href="LICENSE">MIT</a></p>
 
-Reusable application infrastructure and GPUI components, used by [Plus7z](https://github.com/tzhaos/7zp-rust).
+Reusable application infrastructure and GPUI components for Rust desktop software.
 
 | Crate | Responsibility |
 | --- | --- |
@@ -21,7 +21,13 @@ Reusable application infrastructure and GPUI components, used by [Plus7z](https:
 | SQLite | History and transactional runtime state |
 | JSON | Exchange payloads and structured values inside SQLite |
 
-Products own their schemas, validation and paths. Cardo supplies persistence primitives. See [storage contracts](docs/storage.md) for concurrency, errors and backup behavior. There is no legacy import or schema conversion.
+Applications own their schemas, validation and paths. Cardo supplies persistence primitives:
+
+- `config::Snapshot<T>` loads typed TOML and saves atomically with a previous-content backup and external-edit detection. Only missing files use defaults; read and parse failures return errors.
+- `database::Database` provides SQLite transactions, backups and integrity checks. Existing databases must match the supplied application identity and schema version.
+- `storage::Store` provides atomic file writes and JSON serialization helpers.
+
+Run storage operations outside UI rendering. File locks coordinate cooperating writers; configuration files and databases do not share a transaction.
 
 ## Use
 
@@ -41,4 +47,4 @@ cargo build --workspace --locked --release --target x86_64-pc-windows-msvc
 
 Licensed under MIT. See [LICENSE](LICENSE).
 
-The logo reuses Plus7z's original purple Application cube. See [artwork and dependency provenance](THIRD_PARTY.md).
+See [artwork and dependency provenance](THIRD_PARTY.md).

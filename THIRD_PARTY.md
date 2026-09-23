@@ -11,4 +11,3 @@ their package manifests. `Cargo.lock` records the standalone build's versions.
 SQLite is bundled through `rusqlite` 0.40.2. The rusqlite MIT license is retained
 in `licenses/rusqlite.txt`; SQLite's core is in the public domain. TOML parsing
 and editing use `toml` and `toml_edit`, whose package licenses remain applicable.
-Cardo does not bundle Plus7z's Microsoft Fluent UI SVG icon collection.
