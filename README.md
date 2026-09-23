@@ -1,6 +1,10 @@
-# Cardo
+<p align="center">
+  <img src="assets/logo.svg" width="112" alt="Cardo">
+</p>
+<h1 align="center">Cardo</h1>
+<p align="center">A shared foundation for Rust desktop applications.</p>
 
-Shared Rust infrastructure for Windows desktop applications.
+Reusable application infrastructure and GPUI components, extracted from [7zplus](https://github.com/tzhaos/7zp-rust).
 
 | Crate | Responsibility |
 | --- | --- |
@@ -14,3 +18,5 @@ cargo build --workspace --locked
 ```
 
 Licensed under MIT. See [LICENSE](LICENSE).
+
+The logo reuses 7zplus's purple Application cube. See [artwork provenance](THIRD_PARTY.md).
