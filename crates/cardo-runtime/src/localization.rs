@@ -1,18 +1,19 @@
 use anyhow::{Context, Result, bail};
-use fluent_bundle::{FluentArgs, FluentResource, FluentValue, concurrent::FluentBundle};
-use fluent_syntax::ast::{Entry, PatternElement};
+use localization_bundle::{FluentArgs as MessageArgs, FluentResource as MessageResource, concurrent::FluentBundle as MessageBundle};
+pub use localization_bundle::FluentValue as MessageValue;
+use localization_syntax::ast::{Entry, PatternElement};
 use std::collections::HashMap;
 use unic_langid::LanguageIdentifier;
 
 pub struct Catalog {
     locale: String,
-    bundle: FluentBundle<FluentResource>,
+    bundle: MessageBundle<MessageResource>,
     labels: HashMap<String, String>,
 }
 
 impl Catalog {
     pub fn new(locale: &str, source: &str) -> Result<Self> {
-        let resource = FluentResource::try_new(source.to_owned())
+        let resource = MessageResource::try_new(source.to_owned())
             .map_err(|(_, errors)| anyhow::anyhow!("Invalid {locale} messages: {errors:?}"))?;
         let mut labels = HashMap::new();
         for entry in resource.entries() {
@@ -33,7 +34,7 @@ impl Catalog {
             }
         }
         let language: LanguageIdentifier = locale.parse().context("Invalid language identifier")?;
-        let mut bundle = FluentBundle::new_concurrent(vec![language]);
+        let mut bundle = MessageBundle::new_concurrent(vec![language]);
         bundle.set_use_isolating(false);
         bundle
             .add_resource(resource)
@@ -52,13 +53,13 @@ impl Catalog {
             .with_context(|| format!("Missing plain message {}:{key}", self.locale))
     }
 
-    pub fn format(&self, key: &str, values: &[(&str, FluentValue<'_>)]) -> Result<String> {
+    pub fn format(&self, key: &str, values: &[(&str, MessageValue<'_>)]) -> Result<String> {
         let pattern = self
             .bundle
             .get_message(key)
             .and_then(|message| message.value())
             .with_context(|| format!("Missing message {}:{key}", self.locale))?;
-        let mut args = FluentArgs::new();
+        let mut args = MessageArgs::new();
         for (name, value) in values {
             args.set(*name, value.clone());
         }

@@ -11,6 +11,12 @@ pub struct Store {
 }
 
 impl Store {
+    pub fn at(directory: impl Into<PathBuf>) -> Self {
+        Self {
+            directory: directory.into(),
+        }
+    }
+
     pub fn for_app(directory_name: &str) -> Result<Self> {
         Ok(Self {
             directory: dirs::config_local_dir()
@@ -70,5 +76,30 @@ impl Store {
         let bytes = serde_json::to_vec_pretty(value)
             .with_context(|| format!("Cannot serialize {}", self.directory.join(name).display()))?;
         self.write(name, &bytes)
+    }
+}
+
+/// Hold the returned file for the duration of a cross-process critical section.
+/// The persistent lock file must not be removed while another process can use it.
+pub fn lock_file(path: &Path) -> Result<std::fs::File> {
+    let file = std::fs::OpenOptions::new()
+        .read(true)
+        .write(true)
+        .create(true)
+        .truncate(false)
+        .open(path)
+        .with_context(|| format!("Cannot open lock {}", path.display()))?;
+    let deadline = std::time::Instant::now() + std::time::Duration::from_secs(5);
+    loop {
+        match file.try_lock() {
+            Ok(()) => return Ok(file),
+            Err(std::fs::TryLockError::WouldBlock) if std::time::Instant::now() < deadline => {
+                std::thread::sleep(std::time::Duration::from_millis(25))
+            }
+            Err(error) => {
+                return Err(anyhow::anyhow!(error))
+                    .with_context(|| format!("Cannot lock {}", path.display()));
+            }
+        }
     }
 }

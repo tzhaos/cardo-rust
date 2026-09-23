@@ -1,4 +1,5 @@
 //! Settings presentation only; callers own values, validation and persistence.
+use crate::ConditionalBuilder;
 use crate::text::body_text;
 use gpui_kit::{
     base::{Radio, RadioGroup, Switch as BaseSwitch, SwitchThumb, SwitchTrack, spring},
@@ -11,7 +12,6 @@ use gpui_kit::{
         scroll::{Scrollable, ScrollableElement},
         v_flex,
     },
-    prelude::FluentBuilder,
     *,
 };
 

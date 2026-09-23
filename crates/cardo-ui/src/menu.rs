@@ -1,3 +1,4 @@
+use crate::ConditionalBuilder;
 use gpui_kit::base::{Align, Placement, Positioner};
 use gpui_kit::{
     component::{
@@ -6,7 +7,6 @@ use gpui_kit::{
         native_menu::NativeMenu,
         v_flex,
     },
-    prelude::FluentBuilder,
     *,
 };
 use std::{collections::HashMap, rc::Rc};
