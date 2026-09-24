@@ -16,3 +16,4 @@ pub mod chrome;
 pub mod notification;
 pub mod toast;
 pub mod dialog;
+pub mod shortcuts;

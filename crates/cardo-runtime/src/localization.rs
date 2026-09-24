@@ -74,3 +74,20 @@ impl Catalog {
         Ok(text)
     }
 }
+
+/// A fixed set of catalogs with a thread-safe active locale selection.
+pub struct CatalogSet { catalogs: Vec<Catalog>, active: std::sync::atomic::AtomicUsize }
+impl CatalogSet {
+    pub fn new(catalogs: Vec<Catalog>, initial: &str) -> Result<Self> {
+        let active=catalogs.iter().position(|c| c.locale==initial).context("Initial locale is unavailable")?;
+        Ok(Self { catalogs, active: std::sync::atomic::AtomicUsize::new(active) })
+    }
+    pub fn select(&self, locale: &str) -> Result<()> {
+        let index=self.catalogs.iter().position(|c| c.locale==locale).with_context(|| format!("Unsupported locale {locale}"))?;
+        self.active.store(index, std::sync::atomic::Ordering::Relaxed); Ok(())
+    }
+    pub fn current(&self) -> &Catalog { &self.catalogs[self.active.load(std::sync::atomic::Ordering::Relaxed)] }
+    pub fn locale(&self) -> &str { &self.current().locale }
+    pub fn text(&self,key:&str)->Result<&str> { self.current().text(key) }
+    pub fn format(&self,key:&str,values:&[(&str,MessageValue<'_>)])->Result<String> { self.current().format(key,values) }
+}

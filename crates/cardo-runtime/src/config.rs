@@ -126,3 +126,15 @@ fn merge(target: &mut dyn TableLike, before: &dyn TableLike, after: &dyn TableLi
         }
     }
 }
+
+/// Owns a typed snapshot; validators run before any persisted change.
+pub struct ConfigService<T> { snapshot: std::sync::Mutex<Snapshot<T>> }
+impl<T: Serialize + DeserializeOwned + Clone> ConfigService<T> {
+    pub fn new(snapshot: Snapshot<T>) -> Self { Self { snapshot: std::sync::Mutex::new(snapshot) } }
+    pub fn current(&self) -> Result<T> { Ok(self.snapshot.lock().map_err(|_| anyhow::anyhow!("Configuration lock poisoned"))?.value().clone()) }
+    pub fn save(&self, value: T, validate: impl FnOnce(&T) -> Result<()>) -> Result<()> {
+        let mut snapshot=self.snapshot.lock().map_err(|_| anyhow::anyhow!("Configuration lock poisoned"))?;
+        validate(&value).with_context(|| format!("Invalid configuration {}", snapshot.path().display()))?;
+        snapshot.save(value)
+    }
+}

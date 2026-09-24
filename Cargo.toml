@@ -9,6 +9,7 @@ publish = false
 license = "MIT"
 
 [workspace.dependencies]
+cardo-runtime = { path = "crates/cardo-runtime" }
 anyhow = "1.0"
 dirs = "6"
 localization-bundle = { package = "fluent-bundle", version = "0.16" }

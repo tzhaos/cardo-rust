@@ -7,6 +7,7 @@ license.workspace = true
 description = "Shared GPUI desktop presentation and popup menus"
 
 [dependencies]
+cardo-runtime.workspace = true
 gpui-kit.workspace = true
 tracing.workspace = true
 image = { version = "0.25", default-features = false }
