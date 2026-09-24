@@ -86,7 +86,7 @@ pub fn titlebar(title: impl Into<SharedString>, menu: impl IntoElement, close_di
                             .disabled(disabled)
                             // The pinned Windows backend's zoom() only maximizes;
                             // native Max hit testing handles both maximize and restore.
-                            .when(area == WindowControlArea::Max, |button| {
+                            .when(area == WindowControlArea::Max || (area == WindowControlArea::Close && !disabled), |button| {
                                 button.window_control_area(area)
                             })
                             .when(area == WindowControlArea::Min, |button| {
@@ -95,13 +95,6 @@ pub fn titlebar(title: impl Into<SharedString>, menu: impl IntoElement, close_di
                                         cx.stop_propagation()
                                     })
                                     .on_click(|_, window, _| window.minimize_window())
-                            })
-                            .when(area == WindowControlArea::Close, |button| {
-                                button
-                                    .on_mouse_down(MouseButton::Left, |_, _, cx| {
-                                        cx.stop_propagation()
-                                    })
-                                    .on_click(|_, window, _| window.remove_window())
                             })
                     }),
                 ),

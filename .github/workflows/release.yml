@@ -1,0 +1,53 @@
+name: Cardo release
+
+on:
+  push:
+    tags: ['v*']
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: windows-2025
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install pinned toolchain
+        shell: pwsh
+        run: |
+          rustup show
+          if ($LASTEXITCODE -ne 0) { throw 'Toolchain setup failed' }
+      - name: Build framework and independent template
+        shell: pwsh
+        run: |
+          cargo check -p cardo-runtime --no-default-features --locked
+          if ($LASTEXITCODE -ne 0) { throw 'Minimal runtime build failed' }
+          cargo check -p cardo-app --no-default-features --locked
+          if ($LASTEXITCODE -ne 0) { throw 'Minimal app build failed' }
+          cargo build --workspace --all-features --locked --release --target x86_64-pc-windows-msvc
+          if ($LASTEXITCODE -ne 0) { throw 'Framework build failed' }
+          ./templates/desktop/build.ps1
+          ./templates/desktop/build.ps1 -WithUpdate
+
+  release:
+    needs: build
+    if: github.ref_type == 'tag'
+    runs-on: windows-2025
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+      - name: Publish source release
+        shell: pwsh
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          $tag = $env:GITHUB_REF_NAME
+          $manifest = Get-Content -LiteralPath Cargo.toml -Raw
+          $version = [regex]::Match($manifest, '(?m)^version = "([0-9]+\.[0-9]+\.[0-9]+)"').Groups[1].Value
+          if ($tag -cne "v$version") { throw 'Tag does not match workspace version' }
+          gh release view $tag --repo $env:GITHUB_REPOSITORY --json tagName 2>$null
+          if ($LASTEXITCODE -eq 0) { exit 0 }
+          gh release create $tag --verify-tag --repo $env:GITHUB_REPOSITORY --title "Cardo $tag" --notes-file ".github/release-notes/$tag.md"
+          if ($LASTEXITCODE -ne 0) { throw 'Release creation failed' }

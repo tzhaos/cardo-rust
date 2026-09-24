@@ -1,5 +1,43 @@
+use crate::ConditionalBuilder;
 use cardo_runtime::task::CancellationToken;
+use gpui_kit::component::{h_flex, progress::Progress};
 use gpui_kit::*;
+
+/// Shows only progress supplied by the worker. Unknown totals stay indeterminate.
+pub fn progress_summary(
+    id: &'static str,
+    artwork: impl IntoElement,
+    status: impl Into<SharedString>,
+    percent: Option<u8>,
+    stopping: bool,
+    label: impl Into<SharedString>,
+    cx: &App,
+) -> Div {
+    crate::panel::panel_card(cx)
+        .child(
+            h_flex()
+                .gap(px(16.))
+                .items_center()
+                .child(artwork)
+                .child(crate::text::body_text(status).flex_1())
+                .when_some(percent, |el, value| {
+                    el.child(
+                        div()
+                            .flex_shrink_0()
+                            .text_size(px(18.))
+                            .font_weight(FontWeight::SEMIBOLD)
+                            .child(format!("{value}%")),
+                    )
+                }),
+        )
+        .child(
+            Progress::new(id)
+                .value(f32::from(percent.unwrap_or(0)))
+                .loading(percent.is_none() && !stopping)
+                .color(rgb(crate::theme::palette(cx).accent))
+                .accessibility_label(label),
+        )
+}
 
 /// Owns a background operation and its typed delivery to a weak UI owner.
 /// Dropping requests cancellation; the worker still runs to its actual end.

@@ -804,7 +804,7 @@ dependencies = [
 
 [[package]]
 name = "cardo-app"
-version = "0.2.0"
+version = "0.3.0"
 dependencies = [
  "anyhow",
  "cardo-platform",
@@ -816,7 +816,7 @@ dependencies = [
 
 [[package]]
 name = "cardo-platform"
-version = "0.2.0"
+version = "0.3.0"
 dependencies = [
  "anyhow",
  "async-channel",
@@ -829,7 +829,7 @@ dependencies = [
 
 [[package]]
 name = "cardo-runtime"
-version = "0.2.0"
+version = "0.3.0"
 dependencies = [
  "anyhow",
  "dirs 6.0.0",
@@ -850,7 +850,7 @@ dependencies = [
 
 [[package]]
 name = "cardo-ui"
-version = "0.2.0"
+version = "0.3.0"
 dependencies = [
  "anyhow",
  "cardo-platform",
@@ -862,7 +862,7 @@ dependencies = [
 
 [[package]]
 name = "cardo-update"
-version = "0.2.0"
+version = "0.3.0"
 dependencies = [
  "anyhow",
  "cardo-platform",

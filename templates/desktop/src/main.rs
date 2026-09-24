@@ -10,14 +10,17 @@ use cardo_runtime::{
 };
 use cardo_ui::{controls::command, panel::*, settings_page::*, text::body_text, toast::ToastHost};
 use gpui_kit::{
+    base::ElementExt,
     component::{Disableable, Icon, h_flex, v_flex},
     *,
 };
 use serde::{Deserialize, Serialize};
 use sha2::{Digest, Sha256};
 use std::{
+    cell::Cell,
     io::Read,
     path::PathBuf,
+    rc::Rc,
     sync::{
         Arc, OnceLock,
         atomic::{AtomicU64, Ordering},
@@ -106,6 +109,7 @@ struct Desk {
     dialog: cardo_ui::dialog::DialogHost,
     main: AnyWindowHandle,
     focus: FocusHandle,
+    content_bounds: Rc<Cell<Bounds<Pixels>>>,
 }
 impl Desk {
     fn new(
@@ -141,6 +145,7 @@ impl Desk {
             dialog: Default::default(),
             main: window.window_handle(),
             focus,
+            content_bounds: Rc::new(Cell::new(Bounds::default())),
         }
     }
     fn inspect(&mut self, path: Option<PathBuf>, cx: &mut Context<Self>) {
@@ -326,6 +331,8 @@ impl Desk {
 }
 impl Render for Desk {
     fn render(&mut self, window: &mut Window, cx: &mut Context<Self>) -> impl IntoElement {
+        self.dialog.sync_focus(self.error.is_some(), window, cx);
+        let content_bounds = self.content_bounds.clone();
         let busy = self.state.is_busy() || self.draft.is_saving();
         let navigation = h_flex()
             .on_mouse_down(MouseButton::Left, |_, _, cx| cx.stop_propagation())
@@ -453,8 +460,10 @@ impl Render for Desk {
             .track_focus(&self.focus)
             .child(chrome)
             .on_mouse_move(cx.listener(|this, event, window, cx| {
-                this.toast
-                    .update(cx, |toast, cx| toast.pointer_move(event, window, cx))
+                this.toast.update(cx, |toast, cx| {
+                    toast.set_container(this.content_bounds.get());
+                    toast.pointer_move(event, window, cx);
+                })
             }))
             .on_mouse_up(
                 MouseButton::Left,
@@ -462,6 +471,7 @@ impl Render for Desk {
             )
             .child(
                 panel_surface(cx)
+                    .on_prepaint(move |bounds, _, _| content_bounds.set(bounds))
                     .shadow_none()
                     .m(px(12.))
                     .child(settings_content("page", body))
