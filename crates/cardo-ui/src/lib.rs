@@ -17,5 +17,7 @@ pub mod metrics;
 pub mod notification;
 pub mod panel;
 pub mod settings_page;
+pub mod shell;
 pub mod shortcuts;
+pub mod task;
 pub mod toast;

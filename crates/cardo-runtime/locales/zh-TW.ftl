@@ -15,3 +15,8 @@ cardo-update-rolled-back = 更新失敗，已還原原版本：{ $error }
 cardo-update-restart-failed = 更新已處理，但無法重新啟動程式，請手動啟動 應用程式。
 cardo-update-running = 更新正在進行，請等待完成後再開啟程式。
 cardo-update-recovered = 上次更新遭中斷，已還原原版本。
+
+cardo-minimize = 最小化
+cardo-maximize = 最大化
+cardo-close = 關閉
+cardo-menu-more = 更多命令

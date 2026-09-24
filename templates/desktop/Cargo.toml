@@ -1,0 +1,25 @@
+[workspace]
+resolver = "3"
+
+[package]
+name = "cardo-desk"
+version = "0.1.0"
+edition = "2024"
+license = "MIT"
+publish = false
+
+[features]
+default = []
+update = ["cardo-app/update"]
+
+[dependencies]
+cardo-app = { path = "../../crates/cardo-app", features = ["config", "localization", "diagnostics"] }
+cardo-runtime = { path = "../../crates/cardo-runtime", features = ["config", "localization"] }
+cardo-ui = { path = "../../crates/cardo-ui", features = ["localization"] }
+cardo-platform = { path = "../../crates/cardo-platform" }
+gpui-kit = "=0.6.1"
+anyhow = "1"
+serde = { version = "1", features = ["derive"] }
+dirs = "6"
+sha2 = "0.10"
+rfd = "0.15"

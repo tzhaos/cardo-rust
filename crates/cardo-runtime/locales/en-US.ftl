@@ -15,3 +15,8 @@ cardo-update-rolled-back = The update failed and the previous version was restor
 cardo-update-restart-failed = Update processing finished, but restart failed. Start the application manually.
 cardo-update-running = An update is in progress. Wait before opening the application.
 cardo-update-recovered = An interrupted update was recovered. The previous version was restored.
+
+cardo-minimize = Minimize
+cardo-maximize = Maximize
+cardo-close = Close
+cardo-menu-more = More commands
