@@ -90,3 +90,12 @@ impl ThemeStyle {
         cx.refresh_windows();
     }
 }
+
+struct Presentation { palette: Palette, font: Font, size: Pixels }
+impl Global for Presentation {}
+pub fn set_presentation(palette: Palette, font: Font, size: Pixels, cx: &mut App) {
+    cx.set_global(Presentation { palette, font, size });
+}
+pub fn palette(cx: &App) -> Palette { cx.global::<Presentation>().palette }
+pub fn interface_font(cx: &App) -> Font { cx.global::<Presentation>().font.clone() }
+pub fn ui_font_size(cx: &App) -> Pixels { cx.global::<Presentation>().size }
