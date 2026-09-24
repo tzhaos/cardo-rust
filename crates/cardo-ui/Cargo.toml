@@ -10,3 +10,4 @@ description = "Shared GPUI desktop presentation and popup menus"
 gpui-kit.workspace = true
 tracing.workspace = true
 image = { version = "0.25", default-features = false }
+anyhow.workspace = true

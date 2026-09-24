@@ -13,3 +13,6 @@ pub mod panel;
 pub mod settings_page;
 pub mod artwork;
 pub mod chrome;
+pub mod notification;
+pub mod toast;
+pub mod dialog;
