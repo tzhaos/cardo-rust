@@ -6,7 +6,13 @@ publish.workspace = true
 license.workspace = true
 description = "Shared GPUI desktop presentation and popup menus"
 
+[features]
+default = []
+system-icons = ["dep:cardo-platform"]
+localization = ["cardo-runtime/localization"]
+
 [dependencies]
+cardo-platform = { workspace = true, optional = true }
 cardo-runtime.workspace = true
 gpui-kit.workspace = true
 tracing.workspace = true

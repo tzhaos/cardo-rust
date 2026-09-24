@@ -1,0 +1,17 @@
+cardo-task-cancelled = Task cancelled
+cardo-update-no-release = No public stable release is available for this repository.
+cardo-update-version-invalid = The release tag is not a valid version.
+cardo-update-asset-missing = This release does not include the matching Windows package.
+cardo-update-url-invalid = The download address does not belong to the release repository.
+cardo-executable-directory-missing = Cannot locate the application directory
+cardo-maintenance-app-busy = the application has not closed and may be running a task. Wait for the task to finish or stop it in the app, then run setup or uninstall again. No installed files have been changed by this operation.
+cardo-update-hash-mismatch = Update checksum verification failed. Nothing was installed. Download again.
+cardo-update-package-invalid = The update package or recovery record is invalid. Installation stopped.
+cardo-update-helper-failed = Cannot start the update helper. The current version is unchanged.
+cardo-update-ownership-error = Installation registration does not match this application. Automatic updating is unavailable.
+cardo-update-installer-failed = The installer could not complete the update.
+cardo-update-rollback-failed = Recovery could not finish. Backups remain at { $path }.
+cardo-update-rolled-back = The update failed and the previous version was restored: { $error }
+cardo-update-restart-failed = Update processing finished, but restart failed. Start the application manually.
+cardo-update-running = An update is in progress. Wait before opening the application.
+cardo-update-recovered = An interrupted update was recovered. The previous version was restored.

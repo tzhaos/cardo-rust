@@ -1,0 +1,17 @@
+cardo-task-cancelled = 任务已取消
+cardo-update-no-release = 此仓库尚无公开的稳定版 Release。
+cardo-update-version-invalid = Release 标签不是有效的版本号。
+cardo-update-asset-missing = 此 Release 缺少对应的 Windows 发行包。
+cardo-update-url-invalid = 下载地址不属于发布仓库。
+cardo-executable-directory-missing = 无法定位应用程序目录
+cardo-maintenance-app-busy = 应用 尚未关闭，可能正在执行压缩或解压任务。请等待任务完成或在应用中停止任务，然后重新运行安装或卸载。当前操作尚未修改安装文件。
+cardo-update-hash-mismatch = 更新包校验失败，未安装。请重新下载。
+cardo-update-package-invalid = 更新包或更新记录无效，未继续安装。
+cardo-update-helper-failed = 无法启动更新助手，当前版本未改变。
+cardo-update-ownership-error = 安装登记与当前程序不一致，无法自动更新。
+cardo-update-installer-failed = 安装程序未能完成更新。
+cardo-update-rollback-failed = 更新恢复未完成，备份保留在 { $path }。
+cardo-update-rolled-back = 更新失败，已恢复原版本：{ $error }
+cardo-update-restart-failed = 更新已处理，但无法重新启动程序，请手动启动 应用。
+cardo-update-running = 更新正在进行，请等待完成后再打开程序。
+cardo-update-recovered = 上次更新被中断，已恢复原版本。
